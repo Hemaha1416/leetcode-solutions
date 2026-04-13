@@ -1,0 +1,30 @@
+#include <vector>
+#include <stack>
+#include <algorithm>
+
+class Solution {
+public:
+    int largestRectangleArea(std::vector<int>& heights) {
+        int n = heights.size();
+        std::stack<int> s;
+        int maxArea = 0;
+        
+        for (int i = 0; i <= n; i++) {
+            // Use 0 as a sentinel height at the end to flush the stack
+            int currentHeight = (i == n) ? 0 : heights[i];
+            
+            while (!s.empty() && currentHeight < heights[s.top()]) {
+                int height = heights[s.top()];
+                s.pop();
+                
+                // Calculate width: if stack is empty, it means this bar 
+                // was the shortest seen so far, so width is the full index i.
+                int width = s.empty() ? i : i - s.top() - 1;
+                maxArea = std::max(maxArea, height * width);
+            }
+            s.push(i);
+        }
+        
+        return maxArea;
+    }
+};
