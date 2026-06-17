@@ -1,0 +1,40 @@
+#include <stack>
+
+class BSTIterator {
+private:
+    // Stack to store the ancestors of the current node
+    std::stack<TreeNode*> myStack;
+
+    // Helper method to push all left descendants of a node
+    void pushAllLeft(TreeNode* node) {
+        while (node != nullptr) {
+            myStack.push(node);
+            node = node->left;
+        }
+    }
+
+public:
+    // 1. Initialize the Iterator
+    BSTIterator(TreeNode* root) {
+        pushAllLeft(root);
+    }
+    
+    // 2. Return the next smallest element
+    int next() {
+        // The top of the stack is the next smallest element
+        TreeNode* currNode = myStack.top();
+        myStack.pop();
+        
+        // If the popped node has a right child, process its left branch
+        if (currNode->right != nullptr) {
+            pushAllLeft(currNode->right);
+        }
+        
+        return currNode->val;
+    }
+    
+    // 3. Check if more elements exist
+    bool hasNext() {
+        return !myStack.empty();
+    }
+};
