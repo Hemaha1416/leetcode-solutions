@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+
+class Solution {
+public:
+    std::vector<std::string> findRepeatedDnaSequences(std::string s) {
+        // Handle edge case where string is too short
+        if (s.length() < 10) return {};
+        
+        std::unordered_set<std::string> seen;
+        std::unordered_set<std::string> repeated;
+        
+        // Loop runs perfectly now with size_t
+        for (size_t i = 0; i <= s.length() - 10; ++i) {
+            std::string sub = s.substr(i, 10);
+            
+            if (seen.count(sub)) {
+                repeated.insert(sub);
+            } else {
+                seen.insert(sub);
+            }
+        }
+        
+        return std::vector<std::string>(repeated.begin(), repeated.end());
+    }
+};
