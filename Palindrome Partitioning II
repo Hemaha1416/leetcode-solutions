@@ -1,0 +1,31 @@
+#include <vector>
+#include <string>
+#include <algorithm>
+
+class Solution {
+public:
+    int minCut(std::string s) {
+        int n = s.length();
+        if (n <= 1) return 0;
+
+        // isPal[j][i] will be true if s[j...i] is a palindrome
+        std::vector<std::vector<bool>> isPal(n, std::vector<bool>(n, false));
+        // dp[i] is the min cuts for s[0...i]
+        std::vector<int> dp(n);
+
+        for (int i = 0; i < n; i++) {
+            int minCuts = i; // Max possible cuts
+            for (int j = 0; j <= i; j++) {
+                // Check if s[j...i] is a palindrome
+                if (s[i] == s[j] && (i - j <= 2 || isPal[j + 1][i - 1])) {
+                    isPal[j][i] = true;
+                    // If s[j...i] is a palindrome, cuts needed is dp[j-1] + 1
+                    minCuts = (j == 0) ? 0 : std::min(minCuts, dp[j - 1] + 1);
+                }
+            }
+            dp[i] = minCuts;
+        }
+
+        return dp[n - 1];
+    }
+};
