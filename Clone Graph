@@ -1,0 +1,28 @@
+#include <unordered_map>
+#include <vector>
+
+class Solution {
+    // Map to keep track of already cloned nodes: {OriginalNode : CloneNode}
+    std::unordered_map<Node*, Node*> clones;
+
+public:
+    Node* cloneGraph(Node* node) {
+        if (!node) return nullptr;
+
+        // If node is already cloned, return the existing clone
+        if (clones.find(node) != clones.end()) {
+            return clones[node];
+        }
+
+        // 1. Create the clone for the current node
+        Node* copy = new Node(node->val);
+        clones[node] = copy;
+
+        // 2. Recursively clone all neighbors
+        for (Node* neighbor : node->neighbors) {
+            copy->neighbors.push_back(cloneGraph(neighbor));
+        }
+
+        return copy;
+    }
+};
