@@ -1,0 +1,31 @@
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if (!root) return nullptr;
+        
+        Node* leftmost = root;
+        
+        // Iterate level by level
+        while (leftmost->left) {
+            Node* head = leftmost;
+            
+            // Traverse the current level to connect the children level
+            while (head) {
+                // Connection 1: Left child -> Right child
+                head->left->next = head->right;
+                
+                // Connection 2: Right child -> Next neighbor's Left child
+                if (head->next) {
+                    head->right->next = head->next->left;
+                }
+                
+                head = head->next;
+            }
+            
+            // Move to the next level down
+            leftmost = leftmost->left;
+        }
+        
+        return root;
+    }
+};
