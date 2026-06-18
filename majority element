@@ -1,0 +1,27 @@
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int candidate = 0;
+        int count = 0;
+
+        for (int num : nums) {
+            // If count is zero, we pick a new candidate element
+            if (count == 0) {
+                candidate = num;
+            }
+
+            // Add or subtract votes based on the current candidate match
+            if (num == candidate) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+
+        return candidate;
+    }
+};
