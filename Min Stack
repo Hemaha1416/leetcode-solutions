@@ -1,0 +1,35 @@
+#include <stack>
+#include <algorithm>
+
+class MinStack {
+private:
+    // Pair structure: {actual_value, minimum_so_far}
+    std::stack<std::pair<int, int>> st;
+
+public:
+    MinStack() {
+        // Constructor initializes an empty stack implicit through member declaration
+    }
+    
+    void push(int val) {
+        if (st.empty()) {
+            st.push({val, val});
+        } else {
+            // The new minimum is the min of the current value and the previous minimum
+            int current_min = std::min(val, st.top().second);
+            st.push({val, current_min});
+        }
+    }
+    
+    void pop() {
+        st.pop();
+    }
+    
+    int top() {
+        return st.top().first;
+    }
+    
+    int getMin() {
+        return st.top().second;
+    }
+};
