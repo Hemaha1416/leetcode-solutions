@@ -1,0 +1,29 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_set>
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        // Use a set for O(1) average lookup time
+        unordered_set<string> wordSet(wordDict.begin(), wordDict.end());
+        int n = s.length();
+        
+        // dp[i] means s.substr(0, i) can be segmented
+        vector<bool> dp(n + 1, false);
+        dp[0] = true; // Base case: empty string is segmentable
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                // If s[0..j] is valid AND s[j..i] is in the dictionary
+                if (dp[j] && wordSet.count(s.substr(j, i - j))) {
+                    dp[i] = true;
+                    break; // No need to check other j's for this i
+                }
+            }
+        }
+
+        return dp[n];
+    }
+};
