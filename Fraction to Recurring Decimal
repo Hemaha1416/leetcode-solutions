@@ -1,0 +1,62 @@
+#include <string>
+#include <unordered_map>
+#include <cmath>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        if (numerator == 0) return "0";
+
+        string result = "";
+
+        // Determine the sign of the result
+        // Use long long to prevent overflow when negating INT_MIN
+        long long num = numerator;
+        long long den = denominator;
+        
+        if ((num < 0) ^ (den < 0)) {
+            result += "-";
+        }
+
+        // Convert values to absolute to simplify math operations
+        num = abs(num);
+        den = abs(den);
+
+        // Step 1: Append the integer part
+        result += to_string(num / den);
+
+        long long remainder = num % den;
+        if (remainder == 0) {
+            return result; // Terminates early if it is a whole integer
+        }
+
+        result += ".";
+
+        // Step 2: Track remainders to catch repeating decimal patterns
+        // Key: remainder value, Value: string index where the digit starts
+        unordered_map<long long, int> remainder_map;
+
+        while (remainder != 0) {
+            // If the remainder has been seen before, a cycle is detected
+            if (remainder_map.find(remainder) != remainder_map.end()) {
+                int insert_idx = remainder_map[remainder];
+                result.insert(insert_idx, "(");
+                result += ")";
+                break;
+            }
+
+            // Save the current index for this remainder
+            remainder_map[remainder] = result.length();
+
+            // Perform long division step
+            remainder *= 10;
+            result += to_string(remainder / den);
+            remainder %= den;
+        }
+
+        return result;
+    }
+};
