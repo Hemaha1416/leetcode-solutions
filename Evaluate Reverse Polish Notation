@@ -1,0 +1,31 @@
+#include <vector>
+#include <string>
+#include <stack>
+#include <string_view>
+
+using namespace std;
+
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> st;
+
+        for (const string& token : tokens) {
+            // Check if token is an operator
+            if (token == "+" || token == "-" || token == "*" || token == "/") {
+                int b = st.top(); st.pop();
+                int a = st.top(); st.pop();
+
+                if (token == "+") st.push(a + b);
+                else if (token == "-") st.push(a - b);
+                else if (token == "*") st.push(a * b);
+                else if (token == "/") st.push(a / b); // C++ integer division naturally truncates toward zero
+            } else {
+                // Token is a number, convert string to integer
+                st.push(stoi(token));
+            }
+        }
+
+        return st.top();
+    }
+};
