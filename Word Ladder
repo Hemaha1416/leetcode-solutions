@@ -1,0 +1,48 @@
+#include <vector>
+#include <string>
+#include <unordered_set>
+#include <queue>
+
+class Solution {
+public:
+    int ladderLength(std::string beginWord, std::string endWord, std::vector<std::string>& wordList) {
+        std::unordered_set<std::string> dict(wordList.begin(), wordList.end());
+        
+        // If the target word isn't in the list, no path is possible
+        if (dict.find(endWord) == dict.end()) return 0;
+
+        std::queue<std::string> q;
+        q.push(beginWord);
+        
+        int level = 1; // Start with the first word
+
+        while (!q.empty()) {
+            int size = q.size();
+            
+            // Process all words at the current level
+            for (int i = 0; i < size; i++) {
+                std::string curr = q.front();
+                q.pop();
+
+                // Try changing every character of the current word
+                for (int j = 0; j < curr.size(); j++) {
+                    char original = curr[j];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        curr[j] = c;
+
+                        if (curr == endWord) return level + 1;
+
+                        if (dict.count(curr)) {
+                            q.push(curr);
+                            dict.erase(curr); // Marking as visited to prevent cycles
+                        }
+                    }
+                    curr[j] = original; // Reset for next position
+                }
+            }
+            level++;
+        }
+
+        return 0;
+    }
+};
