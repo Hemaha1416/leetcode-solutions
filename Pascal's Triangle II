@@ -1,0 +1,22 @@
+#include <vector>
+
+class Solution {
+public:
+    std::vector<int> getRow(int rowIndex) {
+        // The rowIndex-th row has (rowIndex + 1) elements
+        std::vector<int> row(rowIndex + 1, 1);
+        
+        // We use long long to prevent overflow during intermediate multiplication
+        long long currentVal = 1;
+        
+        // The first and last elements are always 1, so we calculate indices 1 to rowIndex
+        for (int k = 1; k <= rowIndex; k++) {
+            // Formula: nCk = nC(k-1) * (n - k + 1) / k
+            // where n is the rowIndex
+            currentVal = currentVal * (rowIndex - k + 1) / k;
+            row[k] = (int)currentVal;
+        }
+        
+        return row;
+    }
+};
