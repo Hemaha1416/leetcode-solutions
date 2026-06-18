@@ -1,0 +1,42 @@
+#include <unordered_map>
+#include <list>
+
+class LRUCache {
+    int cap;
+    // List stores pairs of {key, value}
+    std::list<std::pair<int, int>> lruList;
+    // Map stores key -> iterator to the node in the list
+    std::unordered_map<int, std::list<std::pair<int, int>>::iterator> cacheMap;
+
+public:
+    LRUCache(int capacity) : cap(capacity) {}
+
+    int get(int key) {
+        if (cacheMap.find(key) == cacheMap.end()) {
+            return -1;
+        }
+        // Move the accessed node to the front (Most Recently Used)
+        lruList.splice(lruList.begin(), lruList, cacheMap[key]);
+        return cacheMap[key]->second;
+    }
+
+    void put(int key, int value) {
+        if (cacheMap.find(key) != cacheMap.end()) {
+            // Key exists: update value and move to front
+            cacheMap[key]->second = value;
+            lruList.splice(lruList.begin(), lruList, cacheMap[key]);
+            return;
+        }
+
+        if (cacheMap.size() == cap) {
+            // Cache full: remove the least recently used (back of list)
+            int keyToRemove = lruList.back().first;
+            lruList.pop_back();
+            cacheMap.erase(keyToRemove);
+        }
+
+        // Add new key-value pair to the front
+        lruList.push_front({key, value});
+        cacheMap[key] = lruList.begin();
+    }
+};
