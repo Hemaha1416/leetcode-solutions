@@ -1,0 +1,27 @@
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    int findPeakElement(vector<int>& nums) {
+        int low = 0;
+        int high = nums.size() - 1;
+
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+
+            // Check if we are on an ascending slope
+            if (nums[mid] < nums[mid + 1]) {
+                // Peak must be on the right side
+                low = mid + 1;
+            } else {
+                // Peak is either at mid or on the left side
+                high = mid;
+            }
+        }
+
+        // low and high converge to the peak element index
+        return low;
+    }
+};
