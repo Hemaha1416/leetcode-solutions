@@ -1,0 +1,25 @@
+#include <string>
+#include <sstream>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    string reverseWords(string s) {
+        stringstream ss(s);
+        string word;
+        string result = "";
+        
+        // Read words and prepend them to the result string
+        while (ss >> word) {
+            if (result.empty()) {
+                result = word;
+            } else {
+                result = word + " " + result;
+            }
+        }
+        
+        return result;
+    }
+};
