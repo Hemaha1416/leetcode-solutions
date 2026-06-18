@@ -1,0 +1,56 @@
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+class Solution {
+public:
+    int maximumGap(vector<int>& nums) {
+        int n = nums.size();
+        if (n < 2) return 0;
+
+        // Step 1: Find the absolute global min and max values
+        int min_val = nums[0];
+        int max_val = nums[0];
+        for (int num : nums) {
+            min_val = min(min_val, num);
+            max_val = max(max_val, num);
+        }
+
+        // If all elements are identical, the maximum gap is 0
+        if (min_val == max_val) return 0;
+
+        // Step 2: Calculate the minimum possible gap size using the Pigeonhole Principle
+        int gap_size = max(1, (max_val - min_val) / (n - 1));
+        int bucket_count = (max_val - min_val) / gap_size + 1;
+
+        // Structures to track if a bucket is occupied, and its min/max boundaries
+        vector<bool> has_element(bucket_count, false);
+        vector<int> bucket_min(bucket_count, INT_MAX);
+        vector<int> bucket_max(bucket_count, INT_MIN);
+
+        // Step 3: Put each element into its respective bucket range
+        for (int num : nums) {
+            int bucket_idx = (num - min_val) / gap_size;
+            has_element[bucket_idx] = true;
+            bucket_min[bucket_idx] = min(bucket_min[bucket_idx], num);
+            bucket_max[bucket_idx] = max(bucket_max[bucket_idx], num);
+        }
+
+        // Step 4: Scan buckets sequentially to locate the max structural gap
+        int max_gap = 0;
+        int previous_max = min_val; // Initialize with the first element base
+
+        for (int i = 0; i < bucket_count; ++i) {
+            // Skip empty buckets since gaps can only exist across filled boundaries
+            if (!has_element[i]) continue;
+
+            // Gap is measured from the current bucket's min to the previous bucket's max
+            max_gap = max(max_gap, bucket_min[i] - previous_max);
+            previous_max = bucket_max[i];
+        }
+
+        return max_gap;
+    }
+};
