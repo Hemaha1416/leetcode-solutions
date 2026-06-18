@@ -1,0 +1,42 @@
+#include <vector>
+#include <string>
+
+class Solution {
+public:
+    std::vector<std::vector<std::string>> partition(std::string s) {
+        std::vector<std::vector<std::string>> result;
+        std::vector<std::string> currentPath;
+        backtrack(s, 0, currentPath, result);
+        return result;
+    }
+
+private:
+    void backtrack(const std::string& s, int start, std::vector<std::string>& path, std::vector<std::vector<std::string>>& result) {
+        // Base Case: If we've reached the end of the string, we found a valid partition
+        if (start == s.length()) {
+            result.push_back(path);
+            return;
+        }
+
+        for (int end = start; end < s.length(); ++end) {
+            // Check if the current substring s[start...end] is a palindrome
+            if (isPalindrome(s, start, end)) {
+                // Action: Add substring to current path
+                path.push_back(s.substr(start, end - start + 1));
+                
+                // Recurse: Partition the rest of the string
+                backtrack(s, end + 1, path, result);
+                
+                // Backtrack: Remove substring to try the next possible cut
+                path.pop_back();
+            }
+        }
+    }
+
+    bool isPalindrome(const std::string& s, int low, int high) {
+        while (low < high) {
+            if (s[low++] != s[high--]) return false;
+        }
+        return true;
+    }
+};
