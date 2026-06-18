@@ -1,0 +1,19 @@
+#include <vector>
+
+class Solution {
+public:
+    int singleNumber(std::vector<int>& nums) {
+        int ones = 0;
+        int twos = 0;
+
+        for (int num : nums) {
+            // bits in 'ones' are those that have appeared 1 time (mod 3)
+            ones = (ones ^ num) & ~twos;
+            
+            // bits in 'twos' are those that have appeared 2 times (mod 3)
+            twos = (twos ^ num) & ~ones;
+        }
+
+        return ones;
+    }
+};
