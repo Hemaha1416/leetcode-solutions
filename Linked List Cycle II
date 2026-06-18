@@ -1,0 +1,29 @@
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if (!head || !head->next) return nullptr;
+
+        ListNode *slow = head;
+        ListNode *fast = head;
+
+        // 1. Find if a cycle exists
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+
+            if (slow == fast) {
+                // 2. Cycle found! Reset slow to head
+                slow = head;
+                
+                // 3. Move both 1 step at a time; they will meet at the start
+                while (slow != fast) {
+                    slow = slow->next;
+                    fast = fast->next;
+                }
+                return slow; 
+            }
+        }
+
+        return nullptr; // No cycle
+    }
+};
