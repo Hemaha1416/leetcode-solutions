@@ -1,0 +1,20 @@
+class Solution {
+    TreeNode* prev = nullptr;
+
+public:
+    void flatten(TreeNode* root) {
+        if (!root) return;
+
+        // 1. Traverse in reverse pre-order: Right, then Left, then Root
+        flatten(root->right);
+        flatten(root->left);
+
+        // 2. Set the current node's right to the previously processed node
+        root->right = prev;
+        // 3. Set the left to null as per requirement
+        root->left = nullptr;
+
+        // 4. Update prev to the current node for the next step up the stack
+        prev = root;
+    }
+};
