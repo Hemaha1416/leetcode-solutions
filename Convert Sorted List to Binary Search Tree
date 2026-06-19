@@ -1,0 +1,32 @@
+class Solution {
+    ListNode* curr;
+
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        int n = 0;
+        ListNode* temp = head;
+        while (temp) { n++; temp = temp->next; }
+        
+        curr = head;
+        return build(0, n - 1);
+    }
+
+    TreeNode* build(int left, int right) {
+        if (left > right) return nullptr;
+
+        int mid = left + (right - left) / 2;
+
+        // 1. Build left subtree
+        TreeNode* leftChild = build(left, mid - 1);
+
+        // 2. Build root (using the current list node)
+        TreeNode* root = new TreeNode(curr->val);
+        root->left = leftChild;
+        curr = curr->next; // Move to next node for right subtree
+
+        // 3. Build right subtree
+        root->right = build(mid + 1, right);
+
+        return root;
+    }
+};
