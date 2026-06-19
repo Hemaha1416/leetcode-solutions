@@ -1,0 +1,31 @@
+#include <vector>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> pathSum(TreeNode* root, int targetSum) {
+        std::vector<std::vector<int>> allPaths;
+        std::vector<int> currentPath;
+        findPaths(root, targetSum, currentPath, allPaths);
+        return allPaths;
+    }
+
+private:
+    void findPaths(TreeNode* node, int remainingSum, std::vector<int>& path, std::vector<std::vector<int>>& result) {
+        if (!node) return;
+
+        // 1. Choose the current node
+        path.push_back(node->val);
+
+        // 2. Check if it's a leaf and the sum matches
+        if (!node->left && !node->right && remainingSum == node->val) {
+            result.push_back(path);
+        } else {
+            // 3. Continue searching left and right subtrees
+            findPaths(node->left, remainingSum - node->val, path, result);
+            findPaths(node->right, remainingSum - node->val, path, result);
+        }
+
+        // 4. Backtrack: remove the current node before returning to the caller
+        path.pop_back();
+    }
+};
