@@ -1,0 +1,17 @@
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        // Base case: empty tree has no paths
+        if (root == nullptr) return false;
+
+        // Check if we are at a leaf node
+        if (root->left == nullptr && root->right == nullptr) {
+            return targetSum == root->val;
+        }
+
+        // Recursively check left and right subtrees with updated sum
+        int remainingSum = targetSum - root->val;
+        return hasPathSum(root->left, remainingSum) || 
+               hasPathSum(root->right, remainingSum);
+    }
+};
