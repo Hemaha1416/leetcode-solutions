@@ -1,0 +1,41 @@
+#include <vector>
+#include <queue>
+#include <algorithm> // Required for reverse()
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        if (!root) return {};
+
+        vector<vector<int>> result;
+        queue<TreeNode*> q;
+        q.push(root);
+
+        bool leftToRight = true; // Flag to track direction
+
+        while (!q.empty()) {
+            int levelSize = q.size();
+            vector<int> currentLevel;
+
+            for (int i = 0; i < levelSize; ++i) {
+                TreeNode* node = q.front();
+                q.pop();
+                currentLevel.push_back(node->val);
+
+                if (node->left) q.push(node->left);
+                if (node->right) q.push(node->right);
+            }
+
+            // If it's a "right-to-left" level, reverse the current vector
+            if (!leftToRight) {
+                reverse(currentLevel.begin(), currentLevel.end());
+            }
+
+            result.push_back(currentLevel);
+            leftToRight = !leftToRight; // Toggle direction for the next level
+        }
+        return result;
+    }
+};
