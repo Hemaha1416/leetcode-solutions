@@ -1,0 +1,36 @@
+#include <vector>
+#include <unordered_map>
+
+class Solution {
+    std::unordered_map<int, int> inMap;
+    int postIdx;
+
+public:
+    TreeNode* buildTree(std::vector<int>& inorder, std::vector<int>& postorder) {
+        postIdx = postorder.size() - 1;
+        
+        // Map inorder values to indices for O(1) lookup
+        for (int i = 0; i < inorder.size(); i++) {
+            inMap[inorder[i]] = i;
+        }
+        
+        return solve(postorder, 0, inorder.size() - 1);
+    }
+
+private:
+    TreeNode* solve(std::vector<int>& postorder, int inStart, int inEnd) {
+        if (inStart > inEnd) return nullptr;
+
+        // Pick root from the end of current postorder segment
+        int rootVal = postorder[postIdx--];
+        TreeNode* root = new TreeNode(rootVal);
+
+        int mid = inMap[rootVal];
+
+        // MUST build Right subtree first when using postorder
+        root->right = solve(postorder, mid + 1, inEnd);
+        root->left = solve(postorder, inStart, mid - 1);
+
+        return root;
+    }
+};
