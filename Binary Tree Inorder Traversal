@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> s;
+        TreeNode* curr = root;
+
+        while (curr != nullptr || !s.empty()) {
+            // Reach the leftmost node of the current node
+            while (curr != nullptr) {
+                s.push(curr);
+                curr = curr->left;
+            }
+            
+            // Backtrack: Process the node and move to the right subtree
+            curr = s.top();
+            s.pop();
+            res.push_back(curr->val);
+            
+            curr = curr->right;
+        }
+        return res;
+    }
+};
