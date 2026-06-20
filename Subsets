@@ -1,0 +1,23 @@
+#include <vector>
+
+class Solution {
+public:
+    std::vector<std::vector<int>> subsets(std::vector<int>& nums) {
+        std::vector<std::vector<int>> result;
+        std::vector<int> current;
+        generateSubsets(0, nums, current, result);
+        return result;
+    }
+
+private:
+    void generateSubsets(int index, std::vector<int>& nums, std::vector<int>& current, std::vector<std::vector<int>>& result) {
+        // Every path we take is a valid subset, so add it to the result
+        result.push_back(current);
+
+        for (int i = index; i < nums.size(); i++) {
+            current.push_back(nums[i]);            // Include the element
+            generateSubsets(i + 1, nums, current, result); // Move to the next
+            current.pop_back();                     // Backtrack (exclude the element)
+        }
+    }
+};
