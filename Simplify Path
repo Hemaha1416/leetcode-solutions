@@ -1,0 +1,32 @@
+#include <string>
+#include <vector>
+#include <sstream>
+
+class Solution {
+public:
+    std::string simplifyPath(std::string path) {
+        std::vector<std::string> stack;
+        std::stringstream ss(path);
+        std::string temp;
+
+        // Split by '/'
+        while (std::getline(ss, temp, '/')) {
+            if (temp == "" || temp == ".") {
+                continue;
+            }
+            if (temp == "..") {
+                if (!stack.empty()) stack.pop_back();
+            } else {
+                stack.push_back(temp);
+            }
+        }
+
+        // Build the canonical path
+        std::string res = "";
+        for (const std::string& dir : stack) {
+            res += "/" + dir;
+        }
+
+        return res.empty() ? "/" : res;
+    }
+};
