@@ -1,0 +1,32 @@
+#include <vector>
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(std::vector<std::vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+
+        // If the start or end is blocked, no paths are possible
+        if (obstacleGrid[0][0] == 1 || obstacleGrid[m - 1][n - 1] == 1) {
+            return 0;
+        }
+
+        // Use long long for dp to prevent potential overflow during intermediate steps, 
+        // though the problem guarantees the final answer fits in an int.
+        std::vector<long long> dp(n, 0);
+        dp[0] = 1;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    dp[j] = 0; // Obstacle found, no paths through this cell
+                } else if (j > 0) {
+                    // New dp[j] = Top (old dp[j]) + Left (dp[j-1])
+                    dp[j] += dp[j - 1];
+                }
+            }
+        }
+
+        return (int)dp[n - 1];
+    }
+};
