@@ -1,0 +1,32 @@
+class Solution {
+    TreeNode* first = nullptr;
+    TreeNode* second = nullptr;
+    TreeNode* prev = new TreeNode(INT_MIN); // Dummy node for first comparison
+
+public:
+    void recoverTree(TreeNode* root) {
+        inorder(root);
+        // Swap the values of the two identified nodes
+        std::swap(first->val, second->val);
+    }
+
+private:
+    void inorder(TreeNode* root) {
+        if (!root) return;
+
+        inorder(root->left);
+
+        // Check for BST property violation
+        if (prev->val > root->val) {
+            // First violation: first node is 'prev', second is 'root'
+            if (!first) first = prev;
+            // Second violation: always update 'second' to the current 'root'
+            // This handles both adjacent and non-adjacent cases correctly
+            second = root;
+        }
+        
+        prev = root; // Move prev forward
+
+        inorder(root->right);
+    }
+};
