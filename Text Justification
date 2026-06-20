@@ -1,0 +1,53 @@
+#include <vector>
+#include <string>
+
+class Solution {
+public:
+    std::vector<std::string> fullJustify(std::vector<std::string>& words, int maxWidth) {
+        std::vector<std::string> res;
+        int n = words.size();
+        int i = 0;
+
+        while (i < n) {
+            int lineLength = words[i].length();
+            int j = i + 1;
+            
+            // Step 1: Find how many words fit in the current line
+            while (j < n && lineLength + 1 + words[j].length() <= maxWidth) {
+                lineLength += 1 + words[j].length();
+                j++;
+            }
+
+            std::string line = "";
+            int numWords = j - i;
+            int numSpaces = maxWidth - (lineLength - (numWords - 1));
+
+            // Step 2: Format the line
+            // Rule: Last line or single-word line (Left Justified)
+            if (j == n || numWords == 1) {
+                for (int k = i; k < j; k++) {
+                    line += words[k];
+                    if (line.length() < maxWidth) line += " ";
+                }
+                while (line.length() < maxWidth) line += " ";
+            } 
+            // Rule: Middle lines (Fully Justified)
+            else {
+                int spacesBetween = numSpaces / (numWords - 1);
+                int extraSpaces = numSpaces % (numWords - 1);
+
+                for (int k = i; k < j; k++) {
+                    line += words[k];
+                    if (k < j - 1) {
+                        int spacesToApply = spacesBetween + (extraSpaces-- > 0 ? 1 : 0);
+                        line.append(spacesToApply, ' ');
+                    }
+                }
+            }
+            
+            res.push_back(line);
+            i = j; // Move to the next set of words
+        }
+        return res;
+    }
+};
